@@ -118,7 +118,7 @@
           (log-remove-failure id))))))
 
 
-(defn ^Indexes mk-index
+(defn ^monkey.index.Indexes mk-index
   "creates the object used to interact with the search index
 
    Parameters:
