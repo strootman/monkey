@@ -7,30 +7,48 @@
            [clojure.lang PersistentArrayMap]))
 
 
+(def ^{:private true :const true} default-prop-values
+  {"monkey.amqp.host"                 "rabbit"
+   "monkey.amqp.port"                 "5672"
+   "monkey.amqp.user"                 "guest"
+   "monkey.amqp.password"             "guest"
+   "monkey.amqp.queue"                "monkey"
+   "monkey.amqp.exchange.name"        "de"
+   "monkey.amqp.exchange.durable"     "True"
+   "monkey.amqp.exchange.auto-delete" "False"
+   "monkey.es.url"                    "http://elasticsearch:9200"
+   "monkey.es.index"                  "data"
+   "monkey.es.tag-type"               "tag"
+   "monkey.es.batch-size"             "1000"
+   "monkey.es.scroll-size"            "1000"
+   "monkey.es.scroll-timeout"         "1m"
+   "monkey.log-progress-enabled"      "False"
+   "monkey.log-progress-interval"     "10000"
+   "monkey.retry-period-ms"           "1000"
+   "monkey.tags.host"                 "dedb"
+   "monkey.tags.port"                 "5432"
+   "monkey.tags.db"                   "metadata"
+   "monkey.tags.user"                 "de"
+   "monkey.tags.password"             "notprod"
+   "monkey.tags.batch-size"           "10"})
+
+
 (def ^{:private true :const true} prop-names
-  #{"monkey.amqp.host"
-    "monkey.amqp.port"
-    "monkey.amqp.user"
-    "monkey.amqp.password"
-    "monkey.amqp.queue"
-    "monkey.amqp.exchange.name"
-    "monkey.amqp.exchange.durable"
-    "monkey.amqp.exchange.auto-delete"
-    "monkey.es.url"
-    "monkey.es.index"
-    "monkey.es.tag-type"
-    "monkey.es.batch-size"
-    "monkey.es.scroll-size"
-    "monkey.es.scroll-timeout"
-    "monkey.log-progress-enabled"
-    "monkey.log-progress-interval"
-    "monkey.retry-period-ms"
-    "monkey.tags.host"
-    "monkey.tags.port"
-    "monkey.tags.db"
-    "monkey.tags.user"
-    "monkey.tags.password"
-    "monkey.tags.batch-size"})
+  (set (keys default-prop-values)))
+
+
+(defn- ^String get-prop
+  "Retrieves a string configuration setting.
+
+   Parameters:
+     props     - the property map
+     prop-name - the name of the property
+
+   Returns:
+     the property value"
+  [^PersistentArrayMap props ^String prop-name]
+  (str (or (get props prop-name)
+           (get default-prop-values prop-name))))
 
 
 (defn ^String amqp-host
@@ -42,7 +60,7 @@
    Returns:
      the AMQP broker hostname"
   [^PersistentArrayMap props]
-  (string/trim (get props "monkey.amqp.host")))
+  (string/trim (get-prop props "monkey.amqp.host")))
 
 
 (defn ^Integer amqp-port
@@ -54,7 +72,7 @@
    Returns:
      the AMQP broker IP port"
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.amqp.port"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.amqp.port"))))
 
 
 (defn ^String amqp-user
@@ -66,7 +84,7 @@
    Returns:
      the authorized username"
   [^PersistentArrayMap props]
-  (get props "monkey.amqp.user"))
+  (get-prop props "monkey.amqp.user"))
 
 
 (defn ^String amqp-password
@@ -78,7 +96,7 @@
    Returns:
      the authentication password"
   [^PersistentArrayMap props]
-  (get props "monkey.amqp.password"))
+  (get-prop props "monkey.amqp.password"))
 
 
 (defn ^String amqp-exchange-name
@@ -90,7 +108,7 @@
    Returns:
      tue AMQP exchange name"
   [^PersistentArrayMap props]
-  (get props "monkey.amqp.exchange.name"))
+  (get-prop props "monkey.amqp.exchange.name"))
 
 
 (defn ^Boolean amqp-exchange-durable?
@@ -102,7 +120,7 @@
    Returns:
      true if the exchange is durable, otherwise false"
   [^PersistentArrayMap props]
-  (Boolean/parseBoolean (string/trim (get props "monkey.amqp.exchange.durable"))))
+  (Boolean/parseBoolean (string/trim (get-prop props "monkey.amqp.exchange.durable"))))
 
 
 (defn ^Boolean amqp-exchange-auto-delete?
@@ -114,7 +132,7 @@
    Returns:
      true if the exchange is automatically deleted, otherwise false"
   [^PersistentArrayMap props]
-  (Boolean/parseBoolean (string/trim (get props "monkey.amqp.exchange.auto-delete"))))
+  (Boolean/parseBoolean (string/trim (get-prop props "monkey.amqp.exchange.auto-delete"))))
 
 
 (defn ^String amqp-queue
@@ -126,7 +144,7 @@
    Returns:
      the queue name"
   [^PersistentArrayMap props]
-  (get props "monkey.amqp.queue"))
+  (get-prop props "monkey.amqp.queue"))
 
 
 (defn ^Integer es-batch-size
@@ -138,7 +156,7 @@
    Returns:
      the number of documents to handle at once in a bulk indexing operation"
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.es.batch-size"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.es.batch-size"))))
 
 
 (defn ^URL es-url
@@ -150,7 +168,7 @@
    Returns:
      It returns the elasticsearch base URL."
   [^PersistentArrayMap props]
-  (URL. (string/trim (get props "monkey.es.url"))))
+  (URL. (string/trim (get-prop props "monkey.es.url"))))
 
 
 (defn ^String es-index
@@ -162,7 +180,7 @@
    Returns:
      the name of the index"
   [^PersistentArrayMap props]
-  (get props "monkey.es.index"))
+  (get-prop props "monkey.es.index"))
 
 
 (defn ^String es-tag-type
@@ -174,7 +192,7 @@
    Returns:
      the tag mapping type"
   [^PersistentArrayMap props]
-  (get props "monkey.es.tag-type"))
+  (get-prop props "monkey.es.tag-type"))
 
 
 (defn ^Integer es-scroll-size
@@ -187,7 +205,7 @@
    Returns:
      It returns the scroll size"
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.es.scroll-size"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.es.scroll-size"))))
 
 
 (defn ^String es-scroll-timeout
@@ -199,7 +217,7 @@
    Returns:
      It returns the scroll timeout"
   [^PersistentArrayMap props]
-  (string/trim (get props "monkey.es.scroll-timeout")))
+  (string/trim (get-prop props "monkey.es.scroll-timeout")))
 
 
 (defn ^Boolean log-progress?
@@ -211,7 +229,7 @@
    Returns:
      It returns the true if progress should be logged, otherwise false."
   [^PersistentArrayMap props]
-  (Boolean/parseBoolean (string/trim (get props "monkey.log-progress-enabled"))))
+  (Boolean/parseBoolean (string/trim (get-prop props "monkey.log-progress-enabled"))))
 
 
 (defn ^Integer progress-logging-interval
@@ -223,7 +241,7 @@
    Returns:
      It returns the item count."
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.log-progress-interval"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.log-progress-interval"))))
 
 
 (defn ^Integer retry-period
@@ -235,7 +253,7 @@
    Returns:
      It return the period to wait."
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.retry-period-ms"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.retry-period-ms"))))
 
 
 (defn ^String tags-host
@@ -247,7 +265,7 @@
    Returns:
      It returns the domain name of the host of the tags database."
   [^PersistentArrayMap props]
-  (string/trim (get props "monkey.tags.host")))
+  (string/trim (get-prop props "monkey.tags.host")))
 
 
 (defn ^Integer tags-port
@@ -259,7 +277,7 @@
    Returns:
      It returns the port the tags database listens on."
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.tags.port"))))
+  (Integer/parseInt (string/trim (get-prop props "monkey.tags.port"))))
 
 
 (defn ^String tags-db
@@ -271,7 +289,7 @@
    Returns:
      It returns the name of the tags database"
   [^PersistentArrayMap props]
-  (get props "monkey.tags.db"))
+  (get-prop props "monkey.tags.db"))
 
 
 (defn ^String tags-user
@@ -283,7 +301,7 @@
    Returns:
      It returns the authorized username."
    [^PersistentArrayMap props]
-  (get props "monkey.tags.user"))
+  (get-prop props "monkey.tags.user"))
 
 
 (defn ^String tags-password
@@ -295,7 +313,7 @@
    Returns:
      It returns the password"
   [^PersistentArrayMap props]
-  (get props "monkey.tags.password"))
+  (get-prop props "monkey.tags.password"))
 
 
 (defn ^Integer tags-batch-size
@@ -307,22 +325,4 @@
    Returns:
      the number of tags to handle at once in a bulk inspection operation"
   [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get props "monkey.tags.batch-size"))))
-
-
-(defn ^Boolean validate
-  "Validates the configuration. We don't want short-circuit evaluation in this case because
-   logging all missing configuration settings is helpful.
-
-   Parameters:
-     props - The property map to validate
-
-   Returns:
-     It returns true if all of the required parameters are present and false otherwise."
-  [^PersistentArrayMap props]
-  (let [missing-props (set/difference prop-names (set (keys props)))
-        all-present   (empty? missing-props)]
-    (when-not all-present
-      (doseq [missing-prop missing-props]
-        (log/error "configuration setting" missing-prop "is undefined")))
-    all-present))
+  (Integer/parseInt (string/trim (get-prop props "monkey.tags.batch-size"))))

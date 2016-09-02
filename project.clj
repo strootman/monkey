@@ -27,5 +27,8 @@
                  [org.iplantc/clojure-commons "5.2.8.0"]
                  [org.iplantc/common-cli "5.2.8.0"]
                  [org.iplantc/service-logging "5.2.8.0"]]
-  :plugins [[test2junit "1.1.3"]]
+  :eastwood {:exclude-namespaces [monkey.actions :test-paths]
+             :linters [:wrong-arity :wrong-ns-form :wrong-pre-post :wrong-tag :misplaced-docstrings]}
+  :plugins [[jonase/eastwood "0.2.3"]
+            [test2junit "1.1.3"]]
   :profiles {:dev {:resource-paths ["conf/test"]}})

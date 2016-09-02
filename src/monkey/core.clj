@@ -34,8 +34,6 @@
   (let [p (ref nil)]
     (cfg/load-config-from-file cfg-path p)
     (cfg/log-config p)
-    (when-not (props/validate @p)
-      (throw+ "The configuration parameters are invalid."))
     @p))
 
 
