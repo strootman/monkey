@@ -1,19 +1,24 @@
-FROM discoenv/javabase
+FROM clojure:alpine
 
-USER root
+RUN apk add --update git && \
+    rm -rf /var/cache/apk
+
 VOLUME ["/etc/iplant/de"]
 
-COPY conf/main/logback.xml /
-COPY target/monkey-standalone.jar /
-
 ARG git_commit=unknown
-ARG buildenv_git_commit=unknown
 ARG version=unknown
 LABEL org.iplantc.de.monkey.git-ref="$git_commit" \
-      org.iplantc.de.monkey.version="$version" \
-      org.iplantc.de.buildenv.git-ref="$buildenv_git_commit"
+      org.iplantc.de.monkey.version="$version"
 
-RUN ln -s "/opt/jdk/bin/java" "/bin/monkey"
+COPY . /usr/src/app
+COPY conf/main/logback.xml /usr/src/app/logback.xml
+
+WORKDIR /usr/src/app
+
+RUN lein uberjar && \
+    cp target/monkey-standalone.jar .
+
+RUN ln -s "/usr/bin/java" "/bin/monkey"
+
 ENTRYPOINT ["monkey", "-Dlogback.configurationFile=/etc/iplant/de/logging/monkey-logging.xml", "-cp", ".:monkey-standalone.jar", "monkey.core"]
 CMD ["--help"]
-

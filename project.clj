@@ -7,10 +7,10 @@
       (string/trim (:out (sh "git" "rev-parse" "HEAD")))
       ""))
 
-(defproject org.iplantc/monkey "5.2.8.0"
+(defproject org.cyverse/monkey "2.8.1-SNAPSHOT"
   :description "A metadata database crawler. It synchronizes the tag documents in the search data
                 index with the tag information inthe metadata database.  🐒"
-  :url "https://github.com/iPlantCollaborativeOpenSource/DE"
+  :url "https://github.com/cyverse-de/monkey"
   :license {:name "BSD"
             :url "http://iplantcollaborative.org/sites/default/files/iPLANT-LICENSE.txt"}
   :manifest {"Git-Ref" ~(git-ref)}
@@ -24,9 +24,9 @@
                  [com.novemberain/langohr "3.5.1"]
                  [me.raynes/fs "1.4.6"]
                  [slingshot "0.10.3"]
-                 [org.iplantc/clojure-commons "5.2.8.0"]
-                 [org.iplantc/common-cli "5.2.8.0"]
-                 [org.iplantc/service-logging "5.2.8.0"]]
+                 [org.cyverse/clojure-commons "2.8.0"]
+                 [org.cyverse/common-cli "2.8.0"]
+                 [org.cyverse/service-logging "2.8.0"]]
   :eastwood {:exclude-namespaces [monkey.actions :test-paths]
              :linters [:wrong-arity :wrong-ns-form :wrong-pre-post :wrong-tag :misplaced-docstrings]}
   :plugins [[jonase/eastwood "0.2.3"]
