@@ -16,7 +16,7 @@
 (def ^{:private true :const true} svc-info
   {:desc "🐒 -- a metadata database crawler"
    :app-name "monkey"
-   :group-id "org.iplantc"
+   :group-id "org.cyverse"
    :art-id "monkey"
    :service "monkey"})
 
