@@ -8,10 +8,7 @@
 
 
 (def ^{:private true :const true} default-prop-values
-  {"monkey.amqp.host"                 "rabbit"
-   "monkey.amqp.port"                 "5672"
-   "monkey.amqp.user"                 "guest"
-   "monkey.amqp.password"             "guest"
+  {"monkey.amqp.uri"                  "amqp://guest:guestPW@localhost:5672"
    "monkey.amqp.queue"                "monkey"
    "monkey.amqp.exchange.name"        "de"
    "monkey.amqp.exchange.durable"     "True"
@@ -51,53 +48,16 @@
            (get default-prop-values prop-name))))
 
 
-(defn ^String amqp-host
-  "Returns the hostname of the AMQP broker.
+(defn ^String amqp-uri
+  "Returns the URI used to connect to the AMQP broker.
 
    Parameters:
      props - the property map to use
 
    Returns:
-     the AMQP broker hostname"
+     the AMQP broker uri"
   [^PersistentArrayMap props]
-  (string/trim (get-prop props "monkey.amqp.host")))
-
-
-(defn ^Integer amqp-port
-  "Returns the IP port of the AMQP broker listens on.
-
-   Parameters:
-     props - the property map to use
-
-   Returns:
-     the AMQP broker IP port"
-  [^PersistentArrayMap props]
-  (Integer/parseInt (string/trim (get-prop props "monkey.amqp.port"))))
-
-
-(defn ^String amqp-user
-  "Returns the username of provided to the AMQP broker for authorization purposes.
-
-   Parameters:
-     props - the property map to use
-
-   Returns:
-     the authorized username"
-  [^PersistentArrayMap props]
-  (get-prop props "monkey.amqp.user"))
-
-
-(defn ^String amqp-password
-  "Returns the password used to authenticate the username.
-
-   Parameters:
-     props - the property map to use
-
-   Returns:
-     the authentication password"
-  [^PersistentArrayMap props]
-  (get-prop props "monkey.amqp.password"))
-
+  (string/trim (get-prop props "monkey.amqp.uri")))
 
 (defn ^String amqp-exchange-name
   "Returns the name AMQP exchange respondsible for routing messages to monkey.
@@ -326,3 +286,5 @@
      the number of tags to handle at once in a bulk inspection operation"
   [^PersistentArrayMap props]
   (Integer/parseInt (string/trim (get-prop props "monkey.tags.batch-size"))))
+
+

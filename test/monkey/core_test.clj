@@ -9,10 +9,7 @@
 
 (deftest test-default-config
   (testing "default configuration settings"
-    (is (= (config/amqp-host empty-props) "rabbit"))
-    (is (= (config/amqp-port empty-props) 5672))
-    (is (= (config/amqp-user empty-props) "guest"))
-    (is (= (config/amqp-password empty-props) "guest"))
+    (is (= (config/amqp-uri empty-props) "amqp://guest:guestPW@localhost:5672"))
     (is (= (config/amqp-exchange-name empty-props) "de"))
     (is (true? (config/amqp-exchange-durable? empty-props)))
     (is (false? (config/amqp-exchange-auto-delete? empty-props)))
