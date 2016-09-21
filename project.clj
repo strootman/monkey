@@ -30,5 +30,5 @@
   :eastwood {:exclude-namespaces [monkey.actions :test-paths]
              :linters [:wrong-arity :wrong-ns-form :wrong-pre-post :wrong-tag :misplaced-docstrings]}
   :plugins [[jonase/eastwood "0.2.3"]
-            [test2junit "1.1.3"]]
+            [test2junit "1.2.2"]]
   :profiles {:dev {:resource-paths ["conf/test"]}})
