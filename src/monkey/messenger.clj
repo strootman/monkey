@@ -18,10 +18,7 @@
 (defn- attempt-connect
   [props]
   (try
-    (let [conn (amqp/connect {:host     (props/amqp-host props)
-                              :port     (props/amqp-port props)
-                              :username (props/amqp-user props)
-                              :password (props/amqp-password props)})]
+    (let [conn (amqp/connect {:uri (props/amqp-uri props)})]
       (log/info "successfully connected to AMQP broker")
       conn)
     (catch Throwable t
