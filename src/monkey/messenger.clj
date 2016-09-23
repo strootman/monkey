@@ -38,7 +38,7 @@
   [ch props]
   (let [exchange (props/amqp-exchange-name props)
         queue    (props/amqp-queue props)]
-    (exchange/direct ch exchange
+    (exchange/topic ch exchange
       {:durable     (props/amqp-exchange-durable? props)
        :auto-delete (props/amqp-exchange-auto-delete? props)})
     (queue/declare ch queue {:durable true})
