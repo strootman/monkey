@@ -64,7 +64,7 @@
 (defn- handle-ping
   [props _ channel {:keys [delivery-tag routing-key] :as metadata} msg]
   (basic/ack channel delivery-tag)
-  (log/info (format "[events/ping-handler] [%s] [%s]" routing-key (String. msg)))
+  (log/info (format "[messenger/handle-ping] [%s] [%s]" routing-key (String. msg)))
   (basic/publish channel (props/amqp-exchange-name props) "events.monkey.pong"
     (.print (JsonFormat/printer)
       (.. (PingMessages$Pong/newBuilder)
