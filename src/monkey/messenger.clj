@@ -9,7 +9,9 @@
             [langohr.exchange :as exchange]
             [langohr.queue :as queue]
             [monkey.props :as props])
-  (:import [clojure.lang IFn PersistentArrayMap]))
+  (:import [clojure.lang IFn PersistentArrayMap]
+           [org.cyverse.events.ping PingMessages$Pong]
+           [com.google.protobuf.util JsonFormat]))
 
 
 ;; TODO redesign so that the connection logic becomes testable
@@ -42,13 +44,13 @@
       {:durable     (props/amqp-exchange-durable? props)
        :auto-delete (props/amqp-exchange-auto-delete? props)})
     (queue/declare ch queue {:durable true})
-    (doseq [key ["index.all" "index.tags"]]
+    (doseq [key ["index.all" "index.tags" "events.monkey.#"]]
       (queue/bind ch queue exchange {:routing-key key}))
     queue))
 
 
 (defn- handle-delivery
-  [deliver ch metadata _]
+  [_ deliver ch metadata _]
   (let [delivery-tag (:delivery-tag metadata)]
     (try
       (log/info "received reindex tags message")
@@ -59,11 +61,36 @@
         (basic/reject ch delivery-tag true)))))
 
 
+(defn- handle-ping
+  [props _ channel {:keys [delivery-tag routing-key] :as metadata} msg]
+  (basic/ack channel delivery-tag)
+  (log/info (format "[events/ping-handler] [%s] [%s]" routing-key (String. msg)))
+  (basic/publish channel (props/amqp-exchange-name props) "events.monkey.pong"
+    (.print (JsonFormat/printer)
+      (.. (PingMessages$Pong/newBuilder)
+        (setPongFrom "monkey")
+        (build)))))
+
+
+(def handlers
+  {"index.all"          handle-delivery
+   "index.tags"         handle-delivery
+   "events.monkey.ping" handle-ping})
+
+
+(defn route-messages
+  [props deliver channel {:keys [routing-key] :as metadata} msg]
+  (let [handler (get handlers routing-key)]
+    (if-not (nil? handler)
+      (handler props deliver channel metadata msg)
+      (log/error (format "[events/route-messages] [%s] [%s] no handler" routing-key (String. msg))))))
+
+
 (defn- receive
   [conn props notify-received]
   (let [ch       (ch/open conn)
         queue    (prepare-queue ch props)]
-    (consumer/blocking-subscribe ch queue (partial handle-delivery notify-received))))
+    (consumer/blocking-subscribe ch queue (partial route-messages props notify-received))))
 
 
 (defn- silently-close
