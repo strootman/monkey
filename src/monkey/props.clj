@@ -286,5 +286,3 @@
      the number of tags to handle at once in a bulk inspection operation"
   [^PersistentArrayMap props]
   (Integer/parseInt (string/trim (get-prop props "monkey.tags.batch-size"))))
-
-
