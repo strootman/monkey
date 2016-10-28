@@ -1,0 +1,20 @@
+{{- with $base := (printf "configs/%s" (env "DE_ENV")) -}}
+{{ with $v := (key (printf "%s/monkey/log-progress/enabled" $base)) }}monkey.log-progress-enabled = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/monkey/log-progress/interval" $base)) }}monkey.log-progress-interval = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/monkey/retry-period" $base)) }}monkey.retry-period-ms = {{ $v }}{{ end }}
+
+{{ with $v := (key (printf "%s/amqp/uri" $base)) }}monkey.amqp.uri = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/amqp/exchange/name" $base)) }}monkey.amqp.exchange.name = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/monkey/queue" $base)) }}monkey.amqp.queue = {{ $v }}{{ end }}
+
+{{ with $v := (key (printf "%s/elasticsearch/base" $base)) }}monkey.es.url = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/elasticsearch/data-alias" $base)) }}monkey.es.index = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/elasticsearch/batch-size" $base)) }}monkey.es.batch-size = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/elasticsearch/scroll-size" $base)) }}monkey.es.scroll-size = {{ $v }}{{ end }}
+
+{{ with $v := (key (printf "%s/metadata-db/host" $base)) }}monkey.tags.host = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/metadata-db/port" $base)) }}monkey.tags.port = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/metadata-db/name" $base)) }}monkey.tags.name = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/metadata-db/user" $base)) }}monkey.tags.user = {{ $v }}{{ end }}
+{{ with $v := (key (printf "%s/metadata-db/pass" $base)) }}monkey.tags.password = {{ $v }}{{ end }}
+{{- end -}}

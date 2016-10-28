@@ -1,11 +1,10 @@
-FROM clojure:alpine
+FROM discoenv/clojure-base:master
 
-RUN apk add --update git && \
-    rm -rf /var/cache/apk
+ENV CONF_TEMPLATE=/usr/src/app/monkey.properties.tmpl
+ENV CONF_FILENAME=monkey.properties
+ENV PROGRAM=monkey
 
 VOLUME ["/etc/iplant/de"]
-
-WORKDIR /usr/src/app
 
 COPY project.clj /usr/src/app/
 RUN lein deps
@@ -18,8 +17,7 @@ RUN lein uberjar && \
 
 RUN ln -s "/usr/bin/java" "/bin/monkey"
 
-ENTRYPOINT ["monkey", "-Dlogback.configurationFile=/etc/iplant/de/logging/monkey-logging.xml", "-cp", ".:monkey-standalone.jar", "monkey.core"]
-CMD ["--help"]
+ENTRYPOINT ["run-service", "-Dlogback.configurationFile=/etc/iplant/de/logging/monkey-logging.xml", "-cp", ".:monkey-standalone.jar", "monkey.core"]
 
 ARG git_commit=unknown
 ARG version=unknown
