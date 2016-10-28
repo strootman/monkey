@@ -2,3 +2,4 @@ target
 build.xml
 test2junit
 .lein*
+*.swp
