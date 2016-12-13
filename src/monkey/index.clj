@@ -18,7 +18,7 @@
   (let [res (doc/search es (props/es-index props) (props/es-tag-type props)
               :query       (query/match-all)
               :fields      ["_id"]
-              :search_type "scan"
+              :sort        ["_doc"]
               :scroll      (props/es-scroll-timeout props)
               :size        (props/es-scroll-size props))]
     (if (resp/any-hits? res)
