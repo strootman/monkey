@@ -17,7 +17,7 @@
   [props es]
   (let [res (doc/search es (props/es-index props) (props/es-tag-type props)
               :query       (query/match-all)
-              :fields      ["_id"]
+              :_source     ["_id"]
               :sort        ["_doc"]
               :scroll      (props/es-scroll-timeout props)
               :size        (props/es-scroll-size props))]
