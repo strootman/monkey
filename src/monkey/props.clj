@@ -130,6 +130,28 @@
   [^PersistentArrayMap props]
   (URL. (string/trim (get-prop props "monkey.es.url"))))
 
+(defn ^String es-user
+  "Returns the user for authentication with elasticsearch.
+
+   Parameters:
+     props - the property map to use
+
+   Returns:
+     the elasticsearch username"
+  [^PersistentArrayMap props]
+  (get-prop props "monkey.es.user"))
+
+(defn ^String es-password
+  "Returns the password for authentication with elasticsearch.
+
+   Parameters:
+     props - the property map to use
+
+   Returns:
+     the elasticsearch password"
+  [^PersistentArrayMap props]
+  (get-prop props "monkey.es.password"))
+
 
 (defn ^String es-index
   "Returns the index in elasticsearch where the tags are indexed.

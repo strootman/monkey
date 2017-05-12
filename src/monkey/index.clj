@@ -127,5 +127,9 @@
    Returns:
      It returns the object."
   [^PersistentArrayMap props]
-  (->Index props
-           (es/connect (str (props/es-url props)))))
+  (let [url (str (props/es-url props))
+        http-opts (if (or (empty? (props/es-user props)) (empty? (props/es-password props)))
+                    {}
+                    {:basic-auth [(props/es-user props) (props/es-password props)]})]
+    (->Index props
+             (es/connect url http-opts))))
